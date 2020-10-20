@@ -1,0 +1,466 @@
+    {% extends 'base.html' %}
+    {% load static %}
+
+    {% block extra_head %}
+        <!-- Basic -->-->
+    <style media="screen">
+        
+        
+    /* Variables */
+    * {
+    box-sizing: border-box;
+    }
+
+
+    .hidden{
+    display: none;
+    }
+    form {
+    width: 30vw;
+    min-width: 500px;
+    align-self: center;
+    box-shadow: 0px 0px 0px 0.5px rgba(50, 50, 93, 0.1),
+    0px 2px 5px 0px rgba(50, 50, 93, 0.1), 0px 1px 1.5px 0px rgba(0, 0, 0, 0.07);
+    border-radius: 7px;
+    padding: 40px;
+    }
+
+
+    .result-message {
+    line-height: 22px;
+    font-size: 16px;
+    }
+
+    .result-message a {
+    color: rgb(89, 111, 214);
+    font-weight: 600;
+    text-decoration: none;
+    }
+
+
+    #card-error {
+    color: rgb(105, 115, 134);
+    text-align: left;
+    font-size: 13px;
+    line-height: 17px;
+    margin-top: 12px;
+    }
+
+    #card-element {
+    border-radius: 4px 4px 0 0 ;
+    padding: 12px;
+    border: 1px solid rgba(7, 3, 248, 0.1);
+    height: 44px;
+    width: 100%;
+    background: rgb(253, 252, 252);
+    }
+
+    #payment-request-button {
+    margin-bottom: 32px;
+    }
+
+    /* Buttons and links */
+    button {
+    background: #5469d4;
+    color: #ffffff;
+    font-family: Arial, sans-serif;
+    border-radius: 0 0 4px 4px;
+    border: 0;
+    padding: 12px 16px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    display: block;
+    transition: all 0.2s ease;
+    box-shadow: 0px 4px 5.5px 0px rgba(0, 0, 0, 0.07);
+    width: 100%;
+    }
+    button:hover {
+    filter: contrast(115%);
+    }
+    button:disabled {
+    opacity: 0.5;
+    cursor: default;
+    }
+
+    /* spinner/processing state, errors */
+    .spinner,
+    .spinner:before,
+    .spinner:after {
+    border-radius: 50%;
+    }
+    .spinner {
+    color: #ffffff;
+    font-size: 22px;
+    text-indent: -99999px;
+    margin: 0px auto;
+    position: relative;
+    width: 20px;
+    height: 20px;
+    box-shadow: inset 0 0 0 2px;
+    -webkit-transform: translateZ(0);
+    -ms-transform: translateZ(0);
+    transform: translateZ(0);
+    }
+    .spinner:before,
+    .spinner:after {
+    position: absolute;
+    content: "";
+    }
+    .spinner:before {
+    width: 10.4px;
+    height: 20.4px;
+    background: #5469d4;
+    border-radius: 20.4px 0 0 20.4px;
+    top: -0.2px;
+    left: -0.2px;
+    -webkit-transform-origin: 10.4px 10.2px;
+    transform-origin: 10.4px 10.2px;
+    -webkit-animation: loading 2s infinite ease 1.5s;
+    animation: loading 2s infinite ease 1.5s;
+    }
+    .spinner:after {
+    width: 10.4px;
+    height: 10.2px;
+    background: #5469d4;
+    border-radius: 0 10.2px 10.2px 0;
+    top: -0.1px;
+    left: 10.2px;
+    -webkit-transform-origin: 0px 10.2px;
+    transform-origin: 0px 10.2px;
+    -webkit-animation: loading 2s infinite ease;
+    animation: loading 2s infinite ease;
+    }
+
+    @-webkit-keyframes loading {
+    0% {
+    -webkit-transform: rotate(0deg);
+    transform: rotate(0deg);
+    }
+    100% {
+    -webkit-transform: rotate(360deg);
+    transform: rotate(360deg);
+    }
+    }
+    @keyframes loading {
+    0% {
+    -webkit-transform: rotate(0deg);
+    transform: rotate(0deg);
+    }
+    100% {
+    -webkit-transform: rotate(360deg);
+    transform: rotate(360deg);
+    }
+    }
+
+    @media only screen and (max-width: 600px) {
+    form {
+    width: 80vw;
+    }
+    }
+
+    </style>
+    {% endblock extra_head %}
+    {% block content %}
+        
+        <script src="https://js.stripe.com/v3/"></script>
+        <script src="https://polyfill.io/v3/polyfill.min.js?version=3.52.1&features=fetch"></script>
+
+    
+        
+
+        <!-- End Instagram Feed  -->
+
+
+        <!-- Start Footer  -->
+        
+
+
+        <!--It starts Here-->
+
+            <!-- Start All Title Box -->
+            <div class="all-title-box">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <h2>Checkout</h2>
+                            <ul class="breadcrumb">
+                                <li class="breadcrumb-item"><a href="#">Shop</a></li>
+                                <li class="breadcrumb-item active">Checkout</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- End All Title Box -->
+
+            <!-- Start Cart  -->
+            <div class="cart-box-main">
+                <div class="container">
+                    <div class="row new-account-login">
+                        <div class="col-sm-6 col-lg-6 mb-3">
+                        </div>
+                        <div class="col-sm-6 col-lg-6 mb-3">
+                        </div>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-sm-6 col-lg-6 mb-3">
+                            <div class="checkout-address">
+                                <div class="title-left">
+                                    <h3>Billing address</h3>
+                                </div>
+                                <!--Display Form Here-->
+                                <form  action="." method="post" id="payment-form">
+                                    {% csrf_token %} 
+                                    
+                                    <div class="form-row">
+                                    <label for="card-element">
+                                        Credit or debit card
+                                    </label>
+                                    <div id="card-element">
+                                        <!-- A Stripe Element will be inserted here. -->
+                                    </div>
+                                
+                                    <!-- Used to display Element errors. -->
+                                    <div id="card-errors" role="alert"></div>
+                                    </div>
+                                
+                                    <button >Submit Payment</button>
+                                </form>    <!--Endform-->
+                            </div>
+                        </div>
+                        
+                                
+                                
+                    </div>
+                </div>
+                {% include "order_snippet.html" %}-->
+                    <!--<div class="col-sm-6 col-lg-6 mb-3">
+                        <div class="row">
+                            <div class="col-md-12 col-lg-12">
+                                <div class="shipping-method-box">
+                                    <div class="title-left">
+                                        <h3>Shipping Method</h3>
+                                    </div>
+                                    <div class="mb-4">
+                                        <div class="custom-control custom-radio">
+                                            <input id="shippingOption1" name="shipping-option" class="custom-control-input" checked="checked" type="radio">
+                                            <label class="custom-control-label" for="shippingOption1">Standard Delivery</label> <span class="float-right font-weight-bold">FREE</span> </div>
+                                        <div class="ml-4 mb-2 small">(3-7 business days)</div>
+                                        <div class="custom-control custom-radio">
+                                            <input id="shippingOption2" name="shipping-option" class="custom-control-input" type="radio">
+                                            <label class="custom-control-label" for="shippingOption2">Express Delivery</label> <span class="float-right font-weight-bold">KS10.00</span> </div>
+                                        <div class="ml-4 mb-2 small">(2-4 business days)</div>
+                                        <div class="custom-control custom-radio">
+                                            <input id="shippingOption3" name="shipping-option" class="custom-control-input" type="radio">
+                                            <label class="custom-control-label" for="shippingOption3">Next Business day</label> <span class="float-right font-weight-bold">KS20.00</span> </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-12 col-lg-12">
+                                <div class="odr-box">
+                                    <div class="title-left">
+                                        <h3>Shopping cart</h3>
+                                    </div>
+                                    {% for order_item in order.items.all %}
+                                    <div class="rounded p-2 bg-light">
+                                        <div class="media mb-2 border-bottom">
+                                            <div class="media-body"> <a href="detail.html"> {{order_item.item.title}}</a>
+                                                <div class="small text-muted">Price:KS {{order_item.item.price}}<span class="mx-2">|</span> Qty: {{order_item.quantity}} <span class="mx-2">|</span> Subtotal: {{order_item.get_final_price}}</div>
+                                            </div>
+                                        </div>
+                                        {% endfor %}
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-12 col-lg-12">
+                                <div class="order-box">
+                                    <div class="title-left">
+                                        <h3>Your order</h3>
+                                    </div>
+                                    <div class="d-flex">
+                                        <div class="font-weight-bold">Product</div>
+                                        <div class="ml-auto font-weight-bold">Total</div>
+                                    </div>
+                                    <hr class="my-1">
+                                    
+                                    <div class="d-flex">
+                                        <h4>Sub Total</h4>
+                                        <div class="ml-auto font-weight-bold"> {{order.get_total}} </div>
+                                    </div>
+                                    <div class="d-flex">
+                                        <h4>Discount</h4>
+                                        <div class="ml-auto font-weight-bold"> KS 00 </div>
+                                    </div>
+                                    <hr class="my-1">
+                                    <div class="d-flex">
+                                        <h4>Coupon Discount</h4>
+                                        <div class="ml-auto font-weight-bold"> KS 00 </div>
+                                    </div>
+                                    <div class="d-flex">
+                                        <h4>Tax</h4>
+                                        <div class="ml-auto font-weight-bold"> KS 0 </div>
+                                    </div>
+                                    <div class="d-flex">
+                                        <h4>Shipping Cost</h4>
+                                        <div class="ml-auto font-weight-bold"> Free </div>
+                                    </div>
+                                    <hr>
+                                    <div class="d-flex gr-total">
+                                        <h5>Grand Total</h5>
+                                        <div class="ml-auto h5"> KS.{{order.get_total}} </div>
+                                    </div>
+                                    <hr> </div>
+                            </div>
+                            <div class="col-12 d-flex shopping-box"> <a href="/payment/mpesa/" class="ml-auto btn hvr-hover">Place Order</a> </div>
+                            </div>
+                    </div>-->
+            </div>
+        </diV>
+    </diV>
+</diV>
+                    
+                
+            
+            <!-- End Cart -->
+
+            <!-- Start Instagram Feed  -->
+            <div class="instagram-box">
+                <div class="main-instagram owl-carousel owl-theme">
+                    <div class="item">
+                        <div class="ins-inner-box">
+                            <img src="{% static 'images/instagram-img-01.jpg' %}" alt="" />
+                            <div class="hov-in">
+                                <a href="#"><i class="fab fa-instagram"></i></a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="item">
+                        <div class="ins-inner-box">
+                            <img src="{% static 'images/instagram-img-02.jpg' %}" alt="" />
+                            <div class="hov-in">
+                                <a href="#"><i class="fab fa-instagram"></i></a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="item">
+                        <div class="ins-inner-box">
+                            <img src="images/instagram-img-03.jpg" alt="" />
+                            <div class="hov-in">
+                                <a href="#"><i class="fab fa-instagram"></i></a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="item">
+                        <div class="ins-inner-box">
+                            <img src="{% static 'images/instagram-img-04.jpg' %}" alt="" />
+                            <div class="hov-in">
+                                <a href="#"><i class="fab fa-instagram"></i></a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="item">
+                        <div class="ins-inner-box">
+                            <img src="{% static 'images/instagram-img-05.jpg' %}" alt="" />
+                            <div class="hov-in">
+                                <a href="#"><i class="fab fa-instagram"></i></a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="item">
+                        <div class="ins-inner-box">
+                            <img src="{% static 'images/instagram-img-06.jpg' %}" alt="" />
+                            <div class="hov-in">
+                                <a href="#"><i class="fab fa-instagram"></i></a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="item">
+                        <div class="ins-inner-box">
+                            <img src="{% static 'images/instagram-img-07.jpg' %}" alt="" />
+                            <div class="hov-in">
+                                <a href="#"><i class="fab fa-instagram"></i></a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="item">
+                        <div class="ins-inner-box">
+                            <img src="{% static 'images/instagram-img-08.jpg' %}" alt="" />
+                            <div class="hov-in">
+                                <a href="#"><i class="fab fa-instagram"></i></a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="item">
+                        <div class="ins-inner-box">
+                            <img src="{% static 'images/instagram-img-09.jpg' %}" alt="" />
+                            <div class="hov-in">
+                                <a href="#"><i class="fab fa-instagram"></i></a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="item">
+                        <div class="ins-inner-box">
+                            <img src="{% static 'images/instagram-img-05.jpg' %}" alt="" />
+                            <div class="hov-in">
+                                <a href="#"><i class="fab fa-instagram"></i></a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <script nonce="">
+            // A reference to Stripe.js initialized with a fake API key.
+        // Sign in to see examples pre-filled with your key.
+        var stripe = Stripe('pk_test_51HWkNyCLU0Dy61rGS2WikSLrpjhRQO3ZrWSzuP5EffRx5YVnVUttSkrbrH16MZY9NpJhHTlTE71aFQIh0tbmaB7E00WoMfN4Pg');
+        var elements = stripe.elements();
+    // Custom styling can be passed to options when creating an Element.
+    var style = {
+    base: {
+    // Add your base input styles here. For example:
+    fontSize: '16px',
+    color: '#32325d',
+    },
+    };
+
+    // Create an instance of the card Element.
+    var card = elements.create('card', {style: style});
+
+    // Add an instance of the card Element into the `card-element` <div>.
+    card.mount('#card-element');
+    // Create a token or display an error when the form is submitted.
+    var form = document.getElementById('payment-form');
+    form.addEventListener('submit', function(event) {
+    event.preventDefault();
+
+    stripe.createToken(card).then(function(result) {
+    if (result.error) {
+    // Inform the customer that there was an error.
+    var errorElement = document.getElementById('card-errors');
+    errorElement.textContent = result.error.message;
+    } else {
+    // Send the token to your server.
+    stripeTokenHandler(result.token);
+    }
+    });
+    });
+    function stripeTokenHandler(token) {
+    // Insert the token ID into the form so it gets submitted to the server
+    var form = document.getElementById('payment-form');
+    var hiddenInput = document.createElement('input');
+    hiddenInput.setAttribute('type', 'hidden');
+    hiddenInput.setAttribute('name', 'stripeToken');
+    hiddenInput.setAttribute('value', token.id);
+    form.appendChild(hiddenInput);
+
+    // Submit the form
+    form.submit();
+    }
+    </script>
+    {% endblock %}
+            <!-- End Instagram Feed  -->
+
+
+            <!-- Start Footer  -->
+            
